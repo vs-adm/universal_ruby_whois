@@ -49,10 +49,8 @@ Whois::Server.define('sk', 'whois.sk-nic.sk')
 Whois::Server.define('sm', 'whois.ripe.net')
 Whois::Server.define('st', 'whois.nic.st')
 Whois::Server.define('su', 'whois.ripn.net')
-Whois::Server.define('tc', 'whois.tc')
 Whois::Server.define('th', 'whois.thnic.net')
 Whois::Server.define('to', 'whois.tonic.to')
-Whois::Server.define('tv', 'tvwhois.verisign-grs.com')
 Whois::Server.define('uy', 'www.nic.org.uy')
 Whois::Server.define('uz', 'whois.cctld.uz')
 Whois::Server.define('va', 'whois.ripe.net')
@@ -87,17 +85,27 @@ Whois::Server.define('ws', 'whois.worldsite.ws')
 #Whois::Server.define('es',"https://www.nic.es/esnic/servlet/BuscarDomSolAlta?dominio=%DOMAIN%")
 #Whois::Server.define('com.es',"https://www.nic.es/esnic/servlet/BuscarDomSolAlta?dominio=%DOMAIN%")
 
+Whois::Server.define(
+    'tv',
+    'tvwhois.verisign-grs.com',
+    :registered => /Domain ID/im,
+    :free => /No match for/im,
+    :creation_date => /Creation Date/im,
+    :expiration_date => /Expiration Date/im
+)
+
 
 Whois::Server.define(
   %w(gd tc vg ms),
   'whois.adamsnames.tc',
-  :registered => /is registered/im,
-  :free => /is not registered/im
+  :registered => /domain name\:/im,
+  :free => /not found/im
 )
 
 Whois::Server.define(
   %w(jp co.jp or.jp ne.jp ac.jp ad.jp ed.jp go.jp gr.jp lg.jp),
-  ['http://whois.jprs.jp/en/', :post, { :submit => 'query', :key => '%DOMAIN%', :type => 'DOM'}],
+  'whois.jprs.jp',
+  # ['http://whois.jprs.jp/en/', :post, { :submit => 'query', :key => '%DOMAIN%', :type => 'DOM'}],
   :registered => /Domain Information\:/im,
   :free => /No match\!\!/im
 )
@@ -112,7 +120,8 @@ Whois::Server.define(
 
 # By leaving out the whois server, we force it to follow the internic redirection.
 Whois::Server.define(
-  [ 'com', 'net', 'edu' ], nil,
+  %w(com net edu),
+  'whois.verisign-grs.com',
   :registered => /No match for/im.invert!,
   :free => /No match for/im
 )
@@ -143,13 +152,22 @@ Whois::Server.define(
   :free => /220 available/im,
   :registered => /220 available/im.invert!
 )
+
 Whois::Server.define(
-  %w(eu.com uk.com uk.net us.com la cn.com de.com jpn.com kr.com no.com za.com br.com ar.com ru.com sa.com se.com
+    'eu.com',
+    'whois.centralnic.net',
+    :free => /DOMAIN NOT FOUND/im,
+    :registered => /Domain Name\:/im
+)
+
+Whois::Server.define(
+  %w(uk.com uk.net us.com la cn.com de.com jpn.com kr.com no.com za.com br.com ar.com ru.com sa.com se.com
      se.net hu.com gb.com gb.net qc.com uy.com ae.org no.com se.com),
   'whois.centralnic.net',
   :free => /available for registration/im,
   :registered => /Domain Name\:/im
   )
+
 Whois::Server.define(
   'be',
   'whois.dns.be',
@@ -186,8 +204,8 @@ Whois::Server.define(
 Whois::Server.define(
   'eu',
   'whois.eu',
-  :free => /Nameservers\:/im.invert!,
-  :registered => /Nameservers\:/im,
+  :free => /AVAILABLE/im,
+  :registered => /Name servers\:/im,
   :pending => /APPLICATION PENDING/im,
   :error => /NOT ALLOWED/im
 )
@@ -290,12 +308,8 @@ Whois::Server.define(
   'whois.nic.cx',
   :registered => /Expires:/im,
   :free => /(Not Registered|No Applications Pending)/im
-)Whois::Server.define(
-  %w(gd tc vg ms),
-  'whois.adamsnames.tc',
-  :free => /is not registered/im,
-  :registered => /is registered/im
 )
+
 Whois::Server.define(
   'nu', 
   'whois.nic.nu',
@@ -307,7 +321,7 @@ Whois::Server.define(
   'no',
   'whois.norid.no',
   :registered => /Domain Information/im,
-  :free => /% no matches/im,
+  :free => /% No match/im,
   :creation_date => /(Created:)\s*([\w\-]+)[^\n\r]*[\n\r]/im
 )
 
