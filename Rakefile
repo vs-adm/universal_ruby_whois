@@ -1,9 +1,9 @@
 require 'rubygems'
 # Gem::manage_gems is deprecated
 
-require 'rake/rdoctask'
+require 'rdoc/task'
 require 'rake/packagetask'
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 require 'rake/testtask'
 require 'rake/contrib/rubyforgepublisher'
 
@@ -31,7 +31,7 @@ Rake::RDocTask.new do |rd|
   rd.options << "--all"
 end
 
-Rake::GemPackageTask.new(GEM_SPEC) do |pkg|
+Gem::PackageTask.new(GEM_SPEC) do |pkg|
   pkg.need_tar = true
 end
 
