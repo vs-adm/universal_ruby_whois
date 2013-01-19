@@ -1,5 +1,12 @@
 require 'rubygems'
-require 'activesupport'
+
+# Check which Activesupport gem is loaded
+if Gem.loaded_specs['activesupport'].version >= Gem::Version.create("3.0")
+  require 'active_support/all'
+else
+  require 'activesupport'
+end
+
 require 'net/http'
 require 'uri'
 require 'time'
